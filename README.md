@@ -1,3 +1,22 @@
+# Vagrant AWS Provider - Spot Instance Support
+This repo is (another) fork of vagrant-aws, with added documentation, for the purposes of extending to spot instance request support. Its a great way to save tonnes of wonga on development costs!
+
+Also plan to add code to retain/maintain access to a spot request. Current forked code just creates request > creates instance > cancels request.
+
+Make sure you `vagrant plugin uninstall vagrant-aws` before you run the following setup; the plugins are called the same because its the same provider, so can't have both running alongside!
+
+```
+git clone git@github.com:3vcloud/vagrant-aws.git
+cd vagrant-aws
+git checkout spot
+gem build vagrant-aws.gemspec
+vagrant install plugin vagrant-aws-0.6.1.spot.gem
+```
+
+Original README.md below - added the extra commands for spot instance support.
+
+----------------------------------------------
+
 # Vagrant AWS Provider
 [![Gitter](https://badges.gitter.im/Join Chat.svg)](https://gitter.im/mitchellh/vagrant-aws?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 
