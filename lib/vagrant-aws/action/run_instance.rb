@@ -130,6 +130,9 @@ module VagrantPlugins
           # Immediately save the ID since it is created at this point.
           env[:machine].id = server.id
 
+		  # Tag it again
+		  env[:aws_compute].create_tags(server.id,tags)
+		  
           # Wait for the instance to be ready first
           env[:metrics]["instance_ready_time"] = Util::Timer.time do
             tries = region_config.instance_ready_timeout / 2
