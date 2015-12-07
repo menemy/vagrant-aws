@@ -71,8 +71,9 @@ module VagrantPlugins
               b2.use MessageNotCreated
               next
             end
-
+			
             b2.use Provision
+			b2.use SyncedFolders
           end
         end
       end
