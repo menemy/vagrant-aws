@@ -194,6 +194,11 @@ module VagrantPlugins
       # @return [String]
       attr_accessor :kernel_id
 
+      # The tenancy of the instance in a VPC.
+      # Defaults to 'default'.
+      #
+      # @return [String]
+      attr_accessor :tenancy
 
       def initialize(region_specific=false)
         @access_key_id             = UNSET_VALUE
@@ -230,8 +235,9 @@ module VagrantPlugins
         @source_dest_check         = UNSET_VALUE
         @associate_public_ip       = UNSET_VALUE
         @elb                       = UNSET_VALUE
-        @unregister_elb_from_az       = UNSET_VALUE
+        @unregister_elb_from_az    = UNSET_VALUE
         @kernel_id                 = UNSET_VALUE
+        @tenancy                   = UNSET_VALUE
 
         # Internal state (prefix with __ so they aren't automatically
         # merged)
@@ -395,6 +401,9 @@ module VagrantPlugins
 
         # default false
         @associate_public_ip = false if @associate_public_ip == UNSET_VALUE
+
+        # default 'default'
+        @tenancy = "default" if @tenancy == UNSET_VALUE
 
         # Don't attach instance to any ELB by default
         @elb = nil if @elb == UNSET_VALUE

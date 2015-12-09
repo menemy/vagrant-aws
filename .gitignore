@@ -5,6 +5,7 @@
 *.swp
 
 # Bundler/Rubygems
+*.gem
 .bundle
 pkg/*
 tags
