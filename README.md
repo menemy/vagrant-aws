@@ -1,3 +1,22 @@
+# Vagrant AWS Provider - Spot Instance Support
+This repo is (another) fork of vagrant-aws, with added documentation, for the purposes of extending to spot instance request support. Its a great way to save tonnes of wonga on development costs!
+
+Also plan to add code to retain/maintain access to a spot request. Current forked code just creates request > creates instance > cancels request.
+
+Make sure you `vagrant plugin uninstall vagrant-aws` before you run the following setup; the plugins are called the same because its the same provider, so can't have both running alongside!
+
+```
+git clone git@github.com:3vcloud/vagrant-aws.git
+cd vagrant-aws
+git checkout spot
+gem build vagrant-aws.gemspec
+vagrant install plugin vagrant-aws-0.6.1.spot.gem
+```
+
+Original README.md below - added the extra commands for spot instance support.
+
+----------------------------------------------
+
 # Vagrant AWS Provider
 [![Gitter](https://badges.gitter.im/Join Chat.svg)](https://gitter.im/mitchellh/vagrant-aws?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 
@@ -24,6 +43,7 @@ EC2 and VPC.
 * Define region-specific configurations so Vagrant can manage machines
   in multiple regions.
 * Package running instances into new vagrant-aws friendly boxes
+* Spot Instance Support
 
 ## Usage
 
@@ -168,6 +188,10 @@ This provider exposes quite a few provider-specific configuration options:
 * `unregister_elb_from_az` - Removes the ELB from the AZ on removal of the last instance if true (default). In non default VPC this has to be false.
 * `terminate_on_shutdown` - Indicates whether an instance stops or terminates
   when you initiate shutdown from the instance.
+  
+* `spot_instance` - Boolean value; indicates whether the config is for a spot instance, or on-demand. For more information about spot instances, see the [AWS Documentation](http://docs.aws.amazon.com/AWSEC2/latest/UserGuide/how-spot-instances-work.html)
+* `max_spot_price` - Decimal value; state the maximum bid for your spot instance. Ignored if `spot_instance` is not true.
+* `spot_valid_until` - Timestamp; when this spot instance request should expire, destroying any related instances. Ignored if `spot_instance` is not true.
 
 These can be set like typical provider-specific configuration:
 

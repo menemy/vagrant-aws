@@ -130,6 +130,21 @@ module VagrantPlugins
       # @return [Array<Hash>]
       attr_accessor :block_device_mapping
 
+      # Launch as spot instance
+      #
+      # @return [Boolean]
+      attr_accessor :spot_instance
+
+      # Spot request max price
+      #
+      # @return [String]
+      attr_accessor :spot_max_price
+
+      # Spot request validity
+      #
+      # @return [Time]
+      attr_accessor :spot_valid_until
+
       # Indicates whether an instance stops or terminates when you initiate shutdown from the instance
       #
       # @return [bool]
@@ -218,6 +233,9 @@ module VagrantPlugins
         @user_data                 = UNSET_VALUE
         @use_iam_profile           = UNSET_VALUE
         @block_device_mapping      = []
+        @spot_instance             = UNSET_VALUE
+        @spot_max_price            = UNSET_VALUE
+        @spot_valid_until          = UNSET_VALUE
         @elastic_ip                = UNSET_VALUE
         @iam_instance_profile_arn  = UNSET_VALUE
         @iam_instance_profile_name = UNSET_VALUE
@@ -380,6 +398,15 @@ module VagrantPlugins
         # User Data is nil by default
         @user_data = nil if @user_data == UNSET_VALUE
 
+        # By default don't use spot requests
+        @spot_instance = false if @spot_instance == UNSET_VALUE
+
+        # Required, no default
+        @spot_max_price = nil if @spot_max_price == UNSET_VALUE
+
+        # Default: Request is effective indefinitely.
+        @spot_valid_until = nil if @spot_valid_until == UNSET_VALUE
+
         # default false
         @terminate_on_shutdown = false if @terminate_on_shutdown == UNSET_VALUE
 
@@ -460,6 +487,7 @@ module VagrantPlugins
           end
 
           errors << I18n.t("vagrant_aws.config.ami_required", :region => @region)  if config.ami.nil?
+          errors << I18n.t("vagrant_aws.config.spot_price_required") if config.spot_instance && config.spot_max_price.nil?
         end
 
         { "AWS Provider" => errors }
@@ -479,14 +507,14 @@ module VagrantPlugins
 
 
     class Credentials < Vagrant.plugin("2", :config)
-      # This module reads AWS config and credentials. 
+      # This module reads AWS config and credentials.
       # Behaviour aims to mimic what is described in AWS documentation:
       # http://docs.aws.amazon.com/cli/latest/userguide/cli-chap-getting-started.html
       # http://docs.aws.amazon.com/cli/latest/topic/config-vars.html
       # Which is the following (stopping at the first successful case):
       # 1) read config and credentials from environment variables
       # 2) read config and credentials from files at location defined by environment variables
-      # 3) read config and credentials from files at default location 
+      # 3) read config and credentials from files at default location
       #
       # The mandatory fields for a successful "get credentials" are the id and the secret keys.
       # Region is not required since Config#finalize falls back to sensible defaults.

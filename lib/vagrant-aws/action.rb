@@ -71,7 +71,7 @@ module VagrantPlugins
               b2.use MessageNotCreated
               next
             end
-
+			
             b2.use Provision
           end
         end
